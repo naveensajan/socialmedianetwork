@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>socialmedia</title>
+    <link rel="stylesheet" href="{% static 'usermodule/css/output.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+</head>
+<body>
+
+<!--navigation bar starts-->
+<div id="nav-bar" class="col-xl-12 col-lg-12 col-md-12 col-sm-12"><br>
+<form method="post" action="{% url 'login' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+    <div class="nav-row" style="margin-left: 300px">
+
+        <p>Email Id</p>
+    </div>
+    <div class="nav-row">
+
+        <p><input type="text" name="emailid" required></p>
+    </div>
+    <div class="nav-row">
+
+
+        <p>Password</p>
+    </div>
+    <div class="nav-row">
+
+        <p><input type="password" name="password" required></p>
+    </div>
+    <div class="nav-row">
+
+        <p><input type="submit" value="LOGIN"></p>
+    </div>
+</form>
+</div>
+<!--navigation bar ends-->
+
+<!--body starts-->
+<div id="body-main-box">
+    <div class="card-deck">
+
+        <!--profile box starts-->
+
+        <!--profile box ends-->
+
+        <!--post box starts-->
+        <div id="body-middle-box">
+            <div class="card">
+                <div class="card-header">
+                    <table id="table-post" width="100%">
+                        <tr>
+                            <th>
+                                <img src="{% static 'usermodule/images/signup.jpg' %}" width="490px" height="350px">
+                                <!--<a href="#" >Start a post</a>-->
+                            </th>
+
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+            <hr>
+        </div>
+        <!--post box ends-->
+
+        <!--recommendation box starts-->
+        <div id="body-third-box" class="card">
+            <div class="card-header">
+                <h6>SignUp Here</h6>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'register' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            First Name
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="fname" required/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Last Name
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                               <input type="text" name="lname" required/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                           Gender
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                               <input type="radio" name="gender" value="male" required>Male
+                                 <input type="radio" name="gender" value="female" required>Female
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                 <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            DOB
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="date" name="date" required/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                    <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Email Id
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="email" required/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                    <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Password
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="password" name="passwd" required/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                   <input type="submit" value="SignUp">
+                </div>
+                </form>
+            </div>
+        </div>
+        <!--recommendation box ends-->
+
+    </div>
+</div>
+<!--body ends-->
+
+<!--message secction starts-->
+
+
+</body>
+
+</html>

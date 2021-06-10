@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>socialmedia</title>
+    <link rel="stylesheet" href="{% static 'usermodule/css/output.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script type="text/javascript">
+		$( function() {
+		$("#res2").hide();
+		$("#res1").show();
+    $( "#txtSearch" ).autocomplete({
+        source: function(request, response){
+           $.ajax({
+        		    type:"GET",
+        		    url: '/searchfriends/',
+        		    data:{
+                 	name: $("#txtSearch").val()
+        		    },
+        		    success: function( data )
+        		    {
+
+                        response($.map(data,function(item){
+
+
+                            return{
+                                id : item.id,
+                                value : item.value,
+                            }
+                        }))
+                    }
+                });
+             },
+      select: function(event, ui){
+        $("#txtSearch").val(ui.item.value)
+        $("#iduser").val(ui.item.id);
+      }
+    });
+    $("#txtSearch").change(function () {
+
+      		fid = $("#iduser").val();
+
+				$.ajax({
+        		type:"GET",
+        		url: "/friend_ajax",
+        		data:{
+
+                 	fid : fid
+        		},
+        		success: function( data )
+        		{
+
+                    $("#res1").hide();
+
+					$("#res2").html(data);
+					$("#res2").show();
+					$("#txtSearch").val("");
+        		}
+     		});
+
+    });
+    });
+
+
+
+
+    </script>
+
+
+
+</head>
+<body>
+
+<!--navigation bar starts-->
+<div id="nav-bar" class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+    <div class="nav-row" style="padding-left: 5px">
+        <img src="{% static 'usermodule/images/icons.jpg' %}" width="30px" height="30px">
+        <input type="search" name="txtSearch" id="txtSearch" size="50px" placeholder="Search Friends">
+        <input type="hidden" name="iduser" id="iduser">
+    </div>
+    <div class="nav-row" style="margin-left: 300px">
+        <i class="fas fa-home"></i>
+        <p><a href="{% url 'userhome' %}"> Home</a></p>
+    </div>
+
+    <div class="nav-row">
+        <i class="fas fa-comments"></i>
+        <p><a href="{% url 'chatting' request.session.userid %}">Message</a></p>
+    </div>
+    <div class="nav-row">
+       <a href="{% url 'editprofile' udata.id %}"> <img src="{{MEDIA_URL}}{{udata.image.url}}" alt="" width="30" height="30" style="border-radius: 35px">
+
+        <p>{{udata.fname}}&nbsp;{{udata.lname}}</p></a>
+    </div>
+    <div class="nav-row">
+
+        <p><a href="{% url 'logout' %}">Logout</a></p>
+    </div>
+</div>
+<!--navigation bar ends-->
+
+<!--body starts-->
+<div id="body-main-box">
+    <div class="card-deck">
+
+        <!--profile box starts-->
+        <div id="body-first-box">
+            <div class="card">
+                <img src="{% static 'usermodule/images/images.jpg' %}" class="card-img-top" alt="...">
+
+                <img src="{{MEDIA_URL}}{{udata.image.url}}" class="card-img-top" alt="..." id="profile-image" height="80" width="100">
+                <div class="card-body" id="profile-card">
+                    <br>
+                    <br>
+                    <h5 class="card-title">{{udata.fname}}&nbsp;{{udata.lname}}</h5>
+                    <small class="text-muted">{{udata.profession}}</small>
+                </div>
+
+
+            </div>
+            <div class="card">
+                <div class="card-body" style="text-align: left">
+                    <small><a href="{% url 'friendrequest' %}">Friend Requests</a></small>
+                    <br>
+                    <small><a href="{% url 'friends' %}">Friends</a></small>
+                    <br>
+                    <small><a href="{% url 'chatting' request.session.userid %}">Message</a></small>
+                    <br>
+                    <small><a href="{% url 'userhome' %}">NewsFeed</a></small>
+                    <br>
+                    <small><a href="{% url 'mypost' %}">My Posts</a></small>
+                </div>
+                <div class="card-footer" style="text-align: center;font-size: 14px!important;">
+                    <small class="font-weight-bold"><a href="{% url 'logout' %}">Logout</a></small>
+                </div>
+            </div>
+        </div>
+        <!--profile box ends-->
+
+        <!--post box starts-->
+        <div id="body-middle-box">
+            <div class="card">
+                <div class="card-header">
+                    <table id="table-post" width="100%">
+                        <tr>
+                            <th>
+                                <i class="far fa-edit"></i>
+                                <button type="submit" class="btn btn-light" style="color:#848f95;" id="btnPost">Photo
+                                </button>
+                                  <button type="submit" class="btn btn-light" style="color:#848f95;" id="btnPost1">Video
+                                </button>
+                                <!--<a href="#" >Start a post</a>-->
+                            </th>
+
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer" style="font-size: 13px">
+                   <div class="container" style="padding: 0" id="res1">
+
+                    <div class="row">
+                        <form method="post" action="{% url 'updateprofile' udata.id  %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            First Name
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="fname" value="{{udata.fname}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Last Name
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                               <input type="text" name="lname"  value="{{udata.lname}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                           Gender
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                               <input type="radio" name="gender" value="male" {% if udata.gender == 'male' %} checked{% endif %}>Male
+                                 <input type="radio" name="gender" value="female" {% if udata.gender == 'female' %} checked{% endif %}>Female
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                 <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            DOB
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                 {{udata.dob}}
+                                 <input type="hidden" name="olddate" value="{{udata.dob|date:'Y-m-d'}}" />
+                                <input type="date" name="date" />
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                    <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Email Id
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="email" value="{{udata.email}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                    <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Password
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="passwd" value="{{udata.password}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                            <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Description
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="description" value="{{udata.description}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                                <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Profession
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="profession" value="{{udata.profession}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                             <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Website
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <input type="text" name="website" value="{{udata.website}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                              <div class="container" style="padding: 0">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            Image
+                        </div>
+                        <div class="col-sm-6">
+                            <p>
+                                <img src="{{MEDIA_URL}}{{udata.image.url}}" height="100" width="100">
+                                <input type="file" name="imgnew" />
+                                 <input type="hidden" name="imgold" value="{{udata.image}}"/>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                   <input type="submit" value="Update">
+                </div>
+                </form>
+
+                    </div>
+
+                </div>
+                    <div class="container" style="padding: 0" id="res2"></div>
+
+
+                    <!--<button id="btnStart">Start</button>-->
+                </div>
+            </div>
+            <hr>
+        </div>
+        <!--post box ends-->
+
+        <!--recommendation box starts-->
+
+        <!--recommendation box ends-->
+
+    </div>
+</div>
+<!--body ends-->
+
+<!--message secction starts-->
+
+
+<div class="bg-model">
+    <div class="model-content">
+        <div id="model-bar"></div>
+        <img id="model-image" src="images/logo.png" alt="">
+        <br>
+        <form action="{% url 'insertpost' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group" style="padding: 10px">
+                <textarea class="form-control" rows="7" placeholder="What do you want to talk about?" name="description"></textarea>
+            </div>
+            <div class="form-group" style="padding: 10px" id="model-attachments">
+
+              <div class="image-upload">
+      Upload Photo <input id="file-input" type="file" name="image"/><br><br><br>
+
+</div>
+
+            </div>
+            <div class="form-group" style="padding: 10px" id="model-submit-btn">
+                <button type="submit" class="btn btn-primary" onclick="onClick()">Post</button>
+                <button type="button" class="btn btn-light">Cancel</button>
+            </div>
+        </form><br><br>
+        <div class="close">+</div>
+    </div>
+</div>
+
+
+<div class="bg-model" id="bg-model">
+    <div class="model-content">
+        <div id="model-bar1"></div>
+        <img id="model-image1" src="images/logo.png" alt="">
+        <br>
+        <form action="{% url 'insertvideo' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group" style="padding: 10px">
+                <textarea class="form-control" rows="7" placeholder="What do you want to talk about?" name="description"></textarea>
+            </div>
+            <div class="form-group" style="padding: 10px" id="model-attachments1">
+
+              <div class="image-upload">
+
+        Upload Video          <input id="file-input1" type="file" name="video"/>
+</div>
+
+            </div>
+            <div class="form-group" style="padding: 10px" id="model-submit-btn1">
+                <button type="submit" class="btn btn-primary" onclick="onClick()">Post</button>
+                <button type="button" class="btn btn-light">Cancel</button>
+            </div>
+        </form><br><br>
+        <div class="close" id="close">+</div>
+    </div>
+</div>
+
+
+<script>
+
+    function onClick() {
+        var doc = document.getElementById("post-box");
+        doc.style.display = "inline";
+        document.getElementById("body-middle-box").appendChild(doc);
+        var model = document.querySelector('.bg-model');
+        model.style.display = 'none';
+    }
+
+    document.getElementById("btnPost").addEventListener('click',
+        function (ev) {
+            var doc = document.querySelector('.bg-model');
+            doc.style.display = 'flex';
+        }
+    );
+    document.getElementById("btnPost1").addEventListener('click',
+        function (ev) {
+            var doc = document.querySelector('#bg-model');
+            doc.style.display = 'flex';
+        }
+    );
+    document.querySelector('.close').addEventListener('click', function () {
+        var model = document.querySelector('.bg-model');
+        model.style.display = 'none';
+
+    });
+     document.querySelector('#close').addEventListener('click', function () {
+        var model = document.querySelector('#bg-model');
+        model.style.display = 'none';
+
+    });
+    document.getElementById("messageBarOpen").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeed").style.display='inline';
+            document.getElementById("messageBarOpen").style.display='none';
+            document.getElementById("messageBarClose").style.display='inline';
+        }
+    );
+
+    document.getElementById("messageBarClose").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeed").style.display='none';
+            document.getElementById("messageBarOpen").style.display='inline';
+            document.getElementById("messageBarClose").style.display='none';
+            document.getElementById("messageFeedDiluni").style.display='none';
+            document.getElementById("messageFeedKavindu").style.display='none';
+            document.getElementById("messageFeedKalana").style.display='none';
+        }
+    );
+
+    document.getElementById("rowDiluni").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeedDiluni").style.display='inline';
+            document.getElementById("messageFeedKavindu").style.display='none';
+            document.getElementById("messageFeedKalana").style.display='none';
+        }
+    );
+
+    document.getElementById("rowKavindu").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeedDiluni").style.display='none';
+            document.getElementById("messageFeedKavindu").style.display='inline';
+            document.getElementById("messageFeedKalana").style.display='none';
+        }
+    );
+
+    document.getElementById("rowKalana").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeedDiluni").style.display='none';
+            document.getElementById("messageFeedKavindu").style.display='none';
+            document.getElementById("messageFeedKalana").style.display='inline';
+        }
+    );
+
+</script>
+
+</body>
+
+</html>

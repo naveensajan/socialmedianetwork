@@ -1,0 +1,37 @@
+from django.urls import path
+from .import views
+
+urlpatterns = [
+        path('home/',views.home, name="home"),
+        path('register/', views.register, name="register"),
+        path('login/', views.login, name="login"),
+        path('userhome/', views.userhome, name="userhome"),
+        path('searchfriends/', views.searchfriends, name="searchfriends"),
+        path('friend_ajax/', views.friend_ajax, name="friend_ajax"),
+        path('addfriend/<str:id>/', views.addfriend, name="addfriend"),
+        path('friendrequest/', views.friendrequest, name="friendrequest"),
+        path('crequest/<int:id>/<int:fid>/<int:uid>/', views.crequest, name="crequest"),
+        path('drequest/<int:id>/', views.drequest, name="drequest"),
+        path('friends/', views.friends, name="friends"),
+        path('chatting/<str:id>', views.chatting, name="chatting"),
+        path('messagefriends/', views.messagefriends, name="messagefriends"),
+        path('insertpost/', views.insertpost, name="insertpost"),
+        path('unsupported/<int:id>',views.unsupported,name="unsupported"),
+        path('unsupported1/<int:id>', views.unsupported1, name="unsupported1"),
+        path('supportlist/<int:id>', views.supportlist, name="supportlist"),
+        path('supported/<int:id>', views.supported, name="supported"),
+        path('supported1/<int:id>', views.supported1, name="supported1"),
+        path('editprofile/<int:id>', views.editprofile, name="editprofile"),
+        path('updateprofile/<int:id>', views.updateprofile, name="updateprofile"),
+        path('insertvideo/', views.insertvideo, name="insertvideo"),
+        path('frienddetails/<int:id>', views.frienddetails, name="frienddetails"),
+        path('comment/<int:id>', views.comment, name="comment"),
+        path('comment1/<int:id>', views.comment1, name="comment1"),
+        path('deletepost/<int:id>', views.deletepost, name="deletepost"),
+        path('comment_ajax/', views.comment_ajax, name="comment_ajax"),
+        path('message_ajax/', views.message_ajax, name="message_ajax"),
+        path('mypost/', views.mypost, name="mypost"),
+        path('logout/', views.logout, name="logout"),
+        path('chats/', views.chats, name="chats"),
+
+]

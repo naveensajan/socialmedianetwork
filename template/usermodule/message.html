@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>socialmedia</title>
+    <link rel="stylesheet" href="{% static 'usermodule/css/output.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'usermodule/css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+		<script type="text/javascript">
+			$( function() {
+		$("#res2").hide();
+		$("#res1").show();
+    $( "#txtSearch" ).autocomplete({
+        source: function(request, response){
+           $.ajax({
+        		    type:"GET",
+        		    url: '/searchfriends/',
+        		    data:{
+                 	name: $("#txtSearch").val()
+        		    },
+        		    success: function( data )
+        		    {
+
+                        response($.map(data,function(item){
+
+
+                            return{
+                                id : item.id,
+                                value : item.value,
+                            }
+                        }))
+                    }
+                });
+             },
+      select: function(event, ui){
+        $("#txtSearch").val(ui.item.value)
+        $("#iduser").val(ui.item.id);
+      }
+    });
+    $("#txtSearch").change(function () {
+
+      		fid = $("#iduser").val();
+
+				$.ajax({
+        		type:"GET",
+        		url: "/friend_ajax",
+        		data:{
+
+                 	fid : fid
+        		},
+        		success: function( data )
+        		{
+
+                    $("#res1").hide();
+
+					$("#res2").html(data);
+					$("#res2").show();
+					$("#txtSearch").val("");
+        		}
+     		});
+
+    });
+
+     $( "#txtSearch1" ).autocomplete({
+        source: function(request, response){
+           $.ajax({
+        		    type:"GET",
+        		    url: '/searchfriends/',
+        		    data:{
+                 	name: $("#txtSearch1").val()
+        		    },
+        		    success: function( data )
+        		    {
+
+                        response($.map(data,function(item){
+
+
+                            return{
+                                id : item.id,
+                                value : item.value,
+                            }
+                        }))
+                    }
+                });
+             },
+      select: function(event, ui){
+        $("#txtSearch1").val(ui.item.value)
+        $("#iduser1").val(ui.item.id);
+      }
+    });
+    $("#txtSearch1").change(function () {
+
+      		fid = $("#iduser1").val();
+
+				$.ajax({
+        		type:"GET",
+        		url: "/message_ajax",
+        		data:{
+
+                 	fid : fid
+        		},
+        		success: function( data )
+        		{
+
+
+
+					$("#useritem").html(data);
+
+					$("#txtSearch1").val("");
+        		}
+     		});
+
+    });
+
+
+    });
+
+
+
+
+
+    </script>
+<script>
+
+    function ajax()
+    {
+
+    var req = new XMLHttpRequest();
+    req.open('GET', '/chats', true);
+    req.send();
+    req.onreadystatechange = function(){
+    if(req.readyState == 4 && req.status == 200)
+    {
+        document.getElementById('chats').innerHTML = req.responseText;
+    }
+    }
+    }
+ setInterval(function(){ajax()}, 10);
+
+
+</script>
+
+</head>
+<body >
+
+<!--navigation bar starts-->
+<div id="nav-bar"  class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+
+    <div class="nav-row" style="margin-left: 300px">
+        <i class="fas fa-home"></i>
+        <p><a href="{% url 'userhome' %}"> Home</a></p>
+    </div>
+
+    <div class="nav-row">
+        <i class="fas fa-comments"></i>
+        <p><a href="{% url 'chatting' request.session.userid %}">Message</a></p>
+    </div>
+    <div class="nav-row">
+        <a href="{% url 'editprofile' userdata.id %}"> <img src="{{MEDIA_URL}}{{userdata.image.url}}" alt="" width="30" height="30" style="border-radius: 35px">
+
+        <p>{{userdata.fname}}&nbsp;{{userdata.lname}}</p></a>
+    </div>
+    <div class="nav-row">
+
+        <p><a href="{% url 'logout' %}">Logout</a></p>
+    </div>
+</div>
+<!--navigation bar ends-->
+
+<!--body starts-->
+<div id="body-main-box">
+    <div class="card-deck">
+
+        <!--profile box starts-->
+        <div id="body-first-box">
+            <div class="card">
+                <img src="{% static 'usermodule/images/images.jpg' %}" class="card-img-top" alt="...">
+
+                <img src="{{MEDIA_URL}}{{userdata.image.url}}" class="card-img-top" alt="..." id="profile-image"  height="80" width="100">
+                <div class="card-body" id="profile-card">
+                    <br>
+                    <br>
+                    <h5 class="card-title">{{userdata.fname}}&nbsp;{{userdata.lname}}</h5>
+                    <small class="text-muted">{{userdata.profession}}</small>
+                </div>
+
+
+            </div>
+            <div class="card">
+                <div class="card-body" style="text-align: left">
+                     <small><a href="{% url 'friendrequest' %}">Friend Requests</a></small>
+                    <br>
+                    <small><a href="{% url 'friends' %}">Friends</a></small>
+                    <br>
+                    <small><a href="{% url 'chatting' request.session.userid %}">Message</a></small>
+                    <br>
+
+                    <small><a href="{% url 'userhome' %}">NewsFeed</a></small>
+                    <br>
+                    <small><a href="{% url 'mypost' %}">My Posts</a></small>
+                    <br><br><br>
+
+                </div>
+                <div class="card-footer" style="text-align: center;font-size: 14px!important;">
+                    <small class="font-weight-bold"><a href="{% url 'logout' %}">Logout</a></small>
+                </div>
+            </div>
+        </div>
+        <!--profile box ends-->
+
+        <!--post box starts-->
+        <div id="body-middle-box" >
+
+                   <div class="container" style="padding: 0" id="res1">
+                    <div class="row" onload="ajax();">
+    <div class="col-xs-1"></div>
+    <div class="col-xs-4" style="background-color: #f5f5f5;margin: 0px 10px;border-radius: 4px; padding: 10px 20px 20px 20px;">
+        <div style="text-align: center;font-size: 18px;background-color: #ddd;border-radius: 4px;color: #5e5fa4;margin-bottom: 8px;">
+            <span>Users Chart</span>
+        </div>
+        <div id="useritem">
+        <ul class="list-group">
+            {% for user in udetails %}
+
+            <li class="list-group-item"><a href="{{user.id}}" ><img src="{{MEDIA_URL}}{{user.image.url}}" width="30px" height="30px" />&nbsp;{{user.fname}} {{user.lname}} </a>
+                        {% if user.ustatus == 0 %}
+                            <span style="height: 12px;width: 12px;background-color: #8a8a8a;border-radius: 6px;
+                            float: right;margin-top: 5px;"></span>
+                        {% else %}
+                            <span style="height: 12px;width: 12px;background-color: green;border-radius: 6px;
+                            float: right;margin-top: 5px;"></span>
+                {% endif %}
+                    </li>
+
+            {% endfor %}
+        </ul>
+            </div>
+    </div>
+    <div class="col-xs-6" style="background-color: #f5f5f5;margin: 0px 10px;border-radius: 4px; padding: 10px 20px 20px 20px;">
+        <div style="text-align: center;font-size: 18px; color: #22aa45;background-color: #ddd;border-radius: 4px;">
+                    <span>{{ request.session.name}}</span>
+                </div>
+        <div id="chat-box"  style="overflow:auto; height:350px; padding: 10px 0px 0px 0px;">
+                    <div id="chats"></div>
+                </div>
+
+                <div>
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" placeholder="Enter your text..." name="msg"/>
+                        <button type="submit" class="btn btn-primary pull-right">Send</button>
+                    </div>
+
+                    </form>
+                </div>
+
+                <div style="text-align: center;">
+                    <h4>Welcome to Chat Room</h4>
+                    <p class="lead">Select users and start chat...</p>
+                </div>
+    </div>
+    <div class="col-xs-1"></div>
+</div>
+                </div>
+                    <div class="container" style="padding: 0" id="res2"></div>
+
+
+                    <!--<button id="btnStart">Start</button>-->
+                </div>
+            </div>
+            <hr>
+
+</div>
+<!--body ends-->
+
+<!--message secction starts-->
+
+
+
+<script>
+
+    function onClick() {
+        var doc = document.getElementById("post-box");
+        doc.style.display = "inline";
+        document.getElementById("body-middle-box").appendChild(doc);
+        var model = document.querySelector('.bg-model');
+        model.style.display = 'none';
+    }
+
+    document.getElementById("btnPost").addEventListener('click',
+        function (ev) {
+            var doc = document.querySelector('.bg-model');
+            doc.style.display = 'flex';
+        }
+    );
+    document.getElementById("btnPost1").addEventListener('click',
+        function (ev) {
+            var doc = document.querySelector('#bg-model');
+            doc.style.display = 'flex';
+        }
+    );
+
+    document.querySelector('.close').addEventListener('click', function () {
+        var model = document.querySelector('.bg-model');
+        model.style.display = 'none';
+
+    });
+     document.querySelector('#close').addEventListener('click', function () {
+        var model = document.querySelector('#bg-model');
+        model.style.display = 'none';
+
+    });
+
+    document.getElementById("messageBarOpen").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeed").style.display='inline';
+            document.getElementById("messageBarOpen").style.display='none';
+            document.getElementById("messageBarClose").style.display='inline';
+        }
+    );
+
+    document.getElementById("messageBarClose").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeed").style.display='none';
+            document.getElementById("messageBarOpen").style.display='inline';
+            document.getElementById("messageBarClose").style.display='none';
+            document.getElementById("messageFeedDiluni").style.display='none';
+            document.getElementById("messageFeedKavindu").style.display='none';
+            document.getElementById("messageFeedKalana").style.display='none';
+        }
+    );
+
+    document.getElementById("rowDiluni").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeedDiluni").style.display='inline';
+            document.getElementById("messageFeedKavindu").style.display='none';
+            document.getElementById("messageFeedKalana").style.display='none';
+        }
+    );
+
+    document.getElementById("rowKavindu").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeedDiluni").style.display='none';
+            document.getElementById("messageFeedKavindu").style.display='inline';
+            document.getElementById("messageFeedKalana").style.display='none';
+        }
+    );
+
+    document.getElementById("rowKalana").addEventListener('click',
+        function (ev) {
+            document.getElementById("messageFeedDiluni").style.display='none';
+            document.getElementById("messageFeedKavindu").style.display='none';
+            document.getElementById("messageFeedKalana").style.display='inline';
+        }
+    );
+
+</script>
+
+</body>
+
+</html>
